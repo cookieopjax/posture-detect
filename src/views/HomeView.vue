@@ -72,21 +72,20 @@ function drawPose(pose) {
 </script>
 
 <template>
-  <div class="flex items-center flex-col">
+  <div class="flex items-center flex-col p-6">
     <h1 class="text-2xl">坐姿偵測</h1>
 
     <div v-if="!isStart" class="flex items-center flex-col">
-      <el-button type="primary" size="large" @click="init()"
-        >開始判斷</el-button
-      >
+      <el-button type="primary" size="large" @click="init()">
+        開始判斷
+      </el-button>
       <img style="width: 40rem; height: 100%" src="../assets/banner.png" />
       <p>請將攝像機斜放以獲得準確體驗</p>
     </div>
 
     <div v-else class="flex items-center flex-col">
       <div class="border flex"><canvas id="canvas"></canvas></div>
-      {{ slouch }}
-      {{ notSlouch }}
+      駝背 : {{ slouch }} 坐正 : {{ notSlouch }}
     </div>
   </div>
 </template>

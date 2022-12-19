@@ -1,4 +1,4 @@
-# pokemon_frontend
+# posture-detect
 
 ## Project Setup
 
