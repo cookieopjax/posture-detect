@@ -1,4 +1,5 @@
 <script setup>
+import { ElMessage } from "element-plus";
 import * as tmPose from "@teachablemachine/pose";
 import { ref } from "vue";
 
@@ -26,7 +27,7 @@ async function init() {
     await webcam.setup(); // request access to the webcam
     isStart.value = true;
   } catch (e) {
-    alert("請重新點及");
+    cameraWarning();
   }
 
   await webcam.play();
@@ -69,11 +70,18 @@ function drawPose(pose) {
     }
   }
 }
+
+const cameraWarning = () => {
+  ElMessage({
+    message: "請允許攝影機開放或選擇正確的來源 !",
+    type: "warning",
+  });
+};
 </script>
 
 <template>
   <div class="flex items-center flex-col p-6">
-    <h1 class="text-2xl">坐姿偵測</h1>
+    <h1 class="text-3xl mb-6">坐姿偵測</h1>
 
     <div v-if="!isStart" class="flex items-center flex-col">
       <el-button type="primary" size="large" @click="init()">
