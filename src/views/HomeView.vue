@@ -9,8 +9,8 @@ let notSlouch = ref(0);
 let model, webcam, ctx, labelContainer, maxPredictions;
 
 async function init() {
-  const modelURL = "./public/models/model.json";
-  const metadataURL = "./public/models/metadata.json";
+  const modelURL = "./models/model.json";
+  const metadataURL = "./models/metadata.json";
 
   // load the model and metadata
   // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
