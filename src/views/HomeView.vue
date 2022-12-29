@@ -1,7 +1,7 @@
 <script setup>
 import { ElMessage } from "element-plus";
 import * as tmPose from "@teachablemachine/pose";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 const isStart = ref(false);
 let slouch = ref(0);
@@ -14,6 +14,11 @@ let notSlouchCounter = ref(0);
 
 let model, webcam, ctx, labelContainer, maxPredictions;
 
+const audio = new Audio("./RickAstley.mp3");
+
+onMounted(() => {
+  console.log(window.screen.width);
+});
 async function init() {
   const modelURL = "./models/model.json";
   const metadataURL = "./models/metadata.json";
@@ -25,7 +30,13 @@ async function init() {
   maxPredictions = model.getTotalClasses();
 
   // Convenience function to setup a webcam
-  const size = 400;
+  let size = 0;
+
+  if (window.screen.width > 600) {
+    size = 500;
+  } else {
+    size = window.screen.width - 20;
+  }
   const flip = true; // whether to flip the webcam
   webcam = new tmPose.Webcam(size, size, flip); // width, height, flip
   try {
@@ -75,8 +86,10 @@ async function predict() {
 
   if (slouchCounter.value > 30) {
     isSlouch.value = true;
+    audio.play();
   } else {
     isSlouch.value = false;
+    audio.pause();
   }
 
   if (notSlouchCounter.value > 30) {
@@ -115,16 +128,17 @@ const cameraWarning = () => {
     <h1 class="text-3xl mb-6">坐姿偵測</h1>
 
     <div v-if="!isStart" class="flex items-center flex-col">
-      <el-button type="primary" size="large" @click="init()" class="mb-8">
+      <el-button type="primary" size="large" @click="init()">
         開始判斷
       </el-button>
-      <img style="width: 40rem; height: 100%" src="../assets/banner.png" />
+      <img style="width: 40rem; height: 100%" src="../assets/banner.jpg" />
       <p class="text-2xl mt-8">請將攝像機以側面拍攝以獲得準確體驗</p>
     </div>
 
     <div v-else class="flex items-center flex-col">
-      <div class="border flex"><canvas id="canvas"></canvas></div>
-      駝背 : {{ slouch }} 坐正 : {{ notSlouch }}
+      <div class="border flex mb-8"><canvas id="canvas"></canvas></div>
+      <h3 class="text-2xl">駝背 : {{ slouch }}</h3>
+      <h3 class="text-2xl">坐正 : {{ notSlouch }}</h3>
     </div>
   </div>
 </template>
