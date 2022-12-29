@@ -5,6 +5,8 @@ import { ref } from "vue";
 
 const isStart = ref(false);
 let slouch = ref(0);
+let isSlouch = ref(false);
+let slouchCounter = ref(0);
 let notSlouch = ref(0);
 
 let model, webcam, ctx, labelContainer, maxPredictions;
@@ -56,6 +58,17 @@ async function predict() {
   slouch.value = prediction[0].probability.toFixed(2);
   notSlouch.value = prediction[1].probability.toFixed(2);
 
+  if (slouch.value > 0.9) {
+    slouchCounter.value++;
+  } else {
+    slouchCounter.value = 0;
+  }
+
+  if (slouchCounter.value > 30) {
+    isSlouch.value = true;
+  } else {
+    isSlouch.value = false;
+  }
   drawPose(pose);
 }
 
@@ -80,7 +93,10 @@ const cameraWarning = () => {
 </script>
 
 <template>
-  <div class="flex items-center flex-col p-6">
+  <div
+    class="flex items-center flex-col h-screen"
+    :class="{ 'bg-red-500': isSlouch, 'bg-green-500': notSlouch > 0.9 }"
+  >
     <h1 class="text-3xl mb-6">坐姿偵測</h1>
 
     <div v-if="!isStart" class="flex items-center flex-col">
@@ -88,7 +104,7 @@ const cameraWarning = () => {
         開始判斷
       </el-button>
       <img style="width: 40rem; height: 100%" src="../assets/banner.png" />
-      <p>請將攝像機斜放以獲得準確體驗</p>
+      <p class="text-2xl">請將攝像機以側面拍攝以獲得準確體驗</p>
     </div>
 
     <div v-else class="flex items-center flex-col">
