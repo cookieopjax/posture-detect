@@ -33,7 +33,7 @@ async function init() {
   let size = 0;
 
   if (window.screen.width > 600) {
-    size = 500;
+    size = 400;
   } else {
     size = window.screen.width - 20;
   }
@@ -69,16 +69,16 @@ async function predict() {
   // Prediction 2: run input through teachable machine classification model
   const prediction = await model.predict(posenetOutput);
 
-  slouch.value = prediction[0].probability.toFixed(2);
-  notSlouch.value = prediction[1].probability.toFixed(2);
+  notSlouch.value = prediction[0].probability.toFixed(2);
+  slouch.value = prediction[1].probability.toFixed(2);
 
-  if (slouch.value > 0.9) {
+  if (slouch.value > 0.8) {
     slouchCounter.value++;
   } else {
     slouchCounter.value = 0;
   }
 
-  if (notSlouch.value > 0.9) {
+  if (notSlouch.value > 0.8) {
     notSlouchCounter.value++;
   } else {
     notSlouchCounter.value = 0;
@@ -143,9 +143,4 @@ const cameraWarning = () => {
   </div>
 </template>
 
-<style scoped>
-/*card 本身會有過大的padding 將其消除*/
-.el-card:deep() .el-card__header {
-  padding: 0.5rem;
-}
-</style>
+<style scoped></style>
