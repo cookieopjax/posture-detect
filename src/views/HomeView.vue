@@ -7,7 +7,10 @@ const isStart = ref(false);
 let slouch = ref(0);
 let isSlouch = ref(false);
 let slouchCounter = ref(0);
+
 let notSlouch = ref(0);
+let isNotSlouch = ref(false);
+let notSlouchCounter = ref(0);
 
 let model, webcam, ctx, labelContainer, maxPredictions;
 
@@ -64,10 +67,22 @@ async function predict() {
     slouchCounter.value = 0;
   }
 
+  if (notSlouch.value > 0.9) {
+    notSlouchCounter.value++;
+  } else {
+    notSlouchCounter.value = 0;
+  }
+
   if (slouchCounter.value > 30) {
     isSlouch.value = true;
   } else {
     isSlouch.value = false;
+  }
+
+  if (notSlouchCounter.value > 30) {
+    isNotSlouch.value = true;
+  } else {
+    isNotSlouch.value = false;
   }
   drawPose(pose);
 }
@@ -94,17 +109,17 @@ const cameraWarning = () => {
 
 <template>
   <div
-    class="flex items-center flex-col h-screen"
-    :class="{ 'bg-red-500': isSlouch, 'bg-green-500': notSlouch > 0.9 }"
+    class="flex items-center flex-col h-screen p-8"
+    :class="{ 'bg-red-500': isSlouch, 'bg-green-500': isNotSlouch }"
   >
     <h1 class="text-3xl mb-6">坐姿偵測</h1>
 
     <div v-if="!isStart" class="flex items-center flex-col">
-      <el-button type="primary" size="large" @click="init()">
+      <el-button type="primary" size="large" @click="init()" class="mb-8">
         開始判斷
       </el-button>
       <img style="width: 40rem; height: 100%" src="../assets/banner.png" />
-      <p class="text-2xl">請將攝像機以側面拍攝以獲得準確體驗</p>
+      <p class="text-2xl mt-8">請將攝像機以側面拍攝以獲得準確體驗</p>
     </div>
 
     <div v-else class="flex items-center flex-col">
